@@ -52,8 +52,9 @@ public class CarritoControlador {
 
     @PutMapping("/api/carrito/{idCarrito}")
     public Carrito modificarCarrito(@PathVariable int idCarrito, @RequestBody Carrito carrito) {
-         carritos.put(idCarrito, carrito);
-         return carrito;
+        carritos.put(idCarrito, carrito);
+        return carrito;
     }
+
 
 }
