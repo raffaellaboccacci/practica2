@@ -1,57 +1,75 @@
 package edu.comillas.icai.gitt.pat.spring.grupo1.modelo;
 
-public class Carrito {
-    private int idCarrito;
-    private int idArticulo;
-    private String descripcion;
-    private int unidades;
-    private double precioFinal;
+import jakarta.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
-    public Carrito(int idCarrito, int idArticulo, String descripcion, int unidades, double precioFinal) {
-        this.idCarrito = idCarrito;
-        this.idArticulo = idArticulo;
-        this.descripcion = descripcion;
-        this.unidades = unidades;
-        this.precioFinal = precioFinal;
+@Entity
+@Table(name = "carritos")
+public class Carrito {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer idCarrito;
+
+    private Integer idUsuario;
+
+    private String correoUsuario;
+
+    private double totalPrecio;
+
+    @OneToMany(mappedBy = "carrito", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private List<LineaCarrito> lineas = new ArrayList<>();
+
+    public Carrito() {
+        // Constructor vacío requerido por JPA
     }
 
-    public int getIdCarrito() {
+    public Integer getIdCarrito() {
         return idCarrito;
     }
 
-    public void setIdCarrito(int idCarrito) {
+    public void setIdCarrito(Integer idCarrito) {
         this.idCarrito = idCarrito;
     }
 
-    public int getIdArticulo() {
-        return idArticulo;
+    public Integer getIdUsuario() {
+        return idUsuario;
     }
 
-    public void setIdArticulo(int idArticulo) {
-        this.idArticulo = idArticulo;
+    public void setIdUsuario(Integer idUsuario) {
+        this.idUsuario = idUsuario;
     }
 
-    public String getDescripcion() {
-        return descripcion;
+    public String getCorreoUsuario() {
+        return correoUsuario;
     }
 
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
+    public void setCorreoUsuario(String correoUsuario) {
+        this.correoUsuario = correoUsuario;
     }
 
-    public int getUnidades() {
-        return unidades;
+    public double getTotalPrecio() {
+        return totalPrecio;
     }
 
-    public void setUnidades(int unidades) {
-        this.unidades = unidades;
+    public void setTotalPrecio(double totalPrecio) {
+        this.totalPrecio = totalPrecio;
     }
 
-    public double getPrecioFinal() {
-        return precioFinal;
+    public List<LineaCarrito> getLineas() {
+        return lineas;
     }
 
-    public void setPrecioFinal(double precioFinal) {
-        this.precioFinal = precioFinal;
+    public void setLineas(List<LineaCarrito> lineas) {
+        this.lineas = lineas;
+    }
+
+    public void recalcularTotal() {
+        double total = 0.0;
+        for (LineaCarrito l : lineas) {
+            total += l.getCosteLinea();
+        }
+        this.totalPrecio = total;
     }
 }
